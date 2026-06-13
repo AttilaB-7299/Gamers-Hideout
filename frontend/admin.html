@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin — Manage Stock</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 1.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    input, select { width: 100%; padding: 0.6rem 0.8rem; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
+    button { padding: 0.7rem 1.5rem; background: #e94560; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
+    button:hover { opacity: 0.88; }
+    table { width: 100%; border-collapse: collapse; margin-top: 2.5rem; }
+    th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    th { background: #f4f4f4; font-weight: 600; }
+    .del-btn { background: none; color: crimson; border: none; cursor: pointer; font-size: 0.9rem; margin: 0; padding: 0; }
+    .del-btn:hover { text-decoration: underline; }
+    .success { color: green; font-size: 0.9rem; margin-top: 0.5rem; display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>🛠️ Admin — Manage Stock</h1>
+
+  <h2 style="margin-bottom: 1rem;">Add New Item</h2>
+  <div class="form-row">
+    <input id="a-name"    placeholder="Item name (e.g. PS5)" />
+    <input id="a-price"   placeholder="Price (e.g. 499.99)" type="number" step="0.01" />
+  </div>
+  <div class="form-row">
+    <input id="a-brand"   placeholder="Brand (e.g. Sony)" />
+    <select id="a-quality">
+      <option value="">Condition</option>
+      <option>Like New</option>
+      <option>Excellent</option>
+      <option>Good</option>
+      <option>Fair</option>
+      <option>Brand New</option>
+      <option>Poor</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <input id="a-desc" placeholder="Short description" style="grid-column: 1 / -1;" />
+  </div>
+  <div class="form-row">
+    <select id="a-disk">
+      <option value="true">Has Disk / Physical</option>
+      <option value="false">Digital / No Disk</option>
+    </select>
+  </div>
+
+  <button onclick="addItem()">Add to Stock</button>
+  <p class="success" id="success-msg">✅ Item added!</p>
+
+  <!-- Current stock table -->
+  <table id="stock-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Brand</th>
+        <th>Price</th>
+        <th>Condition</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id="stock-body"></tbody>
+  </table>
+
+  <script src="stock.js"></script>
+  <script>
+    function renderTable() {
+      const stock = getStock();
+      const body = document.getElementById("stock-body");
+      body.innerHTML = "";
+
+      stock.forEach(entry => {
+        const i = entry.item;
+        body.innerHTML += `
+          <tr>
+            <td>${i.name}</td>
+            <td>${i.brand}</td>
+            <td>$${i.price.toFixed(2)}</td>
+            <td>${i.quality}</td>
+            <td><button class="del-btn" onclick="removeItem(${entry.id})">Remove</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    function addItem() {
+      const name    = document.getElementById("a-name").value.trim();
+      const price   = parseFloat(document.getElementById("a-price").value);
+      const brand   = document.getElementById("a-brand").value.trim();
+      const quality = document.getElementById("a-quality").value;
+      const desc    = document.getElementById("a-desc").value.trim();
+      const hasDisk = document.getElementById("a-disk").value === "true";
+
+      if (!name || !price || !brand || !quality) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      const stock = getStock();
+      const newId = stock.length > 0 ? Math.max(...stock.map(e => e.id)) + 1 : 1;
+      stock.push({ id: newId, item: new Item(name, price, desc, hasDisk, quality, brand) });
+      saveStock(stock);
+
+      // Clear fields
+      ["a-name","a-price","a-brand","a-desc"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById("a-quality").value = "";
+
+      const msg = document.getElementById("success-msg");
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 2500);
+
+      renderTable();
+    }
+
+    function removeItem(id) {
+      if (!confirm("Remove this item from stock?")) return;
+      const stock = getStock().filter(e => e.id !== id);
+      saveStock(stock);
+      renderTable();
+    }
+    function renderRequests() {
+      const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
+      const body = document.getElementById("requests-body");
+      const badge = document.getElementById("badge");
+      const empty = document.getElementById("no-requests");
+
+      body.innerHTML = "";
+      badge.textContent = requests.length > 0 ? requests.length : "";
+      empty.style.display = requests.length === 0 ? "block" : "none";
+
+      requests.forEach(req => {
+        body.innerHTML += `
+          <tr id="req-${req.id}">
+            <td style="font-size:0.8rem; color:gray;">${req.submittedAt}</td>
+            <td>${req.name}</td>
+            <td><a href="mailto:${req.email}">${req.email}</a></td>
+            <td><strong>${req.itemName}</strong></td>
+            <td>$${req.price.toFixed(2)}</td>
+            <td>${req.condition || "—"}</td>
+            <td style="font-size:0.85rem; color:gray;">${req.message || "—"}</td>
+            <td>
+              <button onclick="acceptRequest(${req.id})" style="background:#2ecc71; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer; margin-right:4px;">✅ Accept</button>
+              <button onclick="rejectRequest(${req.id})" style="background:#e74c3c; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer;">❌ Reject</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function acceptRequest(id) {
+      const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
+      const req = requests.find(r => r.id === id);
+      if (!req) return;
+
+      // Add to stock automatically
+      const stock = getStock();
+      const newId = stock.length > 0 ? Math.max(...stock.map(e => e.id)) + 1 : 1;
+      stock.push({
+        id: newId,
+        item: new Item(req.itemName, req.price, req.message || "", true, req.condition || "Good", "—")
+      });
+      saveStock(stock);
+
+      // Remove from pending
+      const updated = requests.filter(r => r.id !== id);
+      localStorage.setItem("pendingRequests", JSON.stringify(updated));
+
+      renderTable();
+      renderRequests();
+    }
+
+    function rejectRequest(id) {
+      if (!confirm("Reject and delete this request?")) return;
+      const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
+      const updated = requests.filter(r => r.id !== id);
+      localStorage.setItem("pendingRequests", JSON.stringify(updated));
+      renderRequests();
+    }
+  renderTable();
+  renderRequests();
+
+  </script>
+<hr style="margin: 3rem 0;" />
+<h2>📬 Incoming Requests <span id="badge" style="background:#e94560; color:white; font-size:0.8rem; padding:2px 10px; border-radius:999px; margin-left:8px;"></span></h2>
+<p style="color: gray; font-size: 0.9rem; margin-bottom: 1.5rem;">These are sell requests submitted by customers. Accept to add to stock, reject to remove.</p>
+
+  <table id="requests-table" style="width:100%; border-collapse:collapse; margin-top:1rem;">
+    <thead>
+      <tr>
+        <th>Submitted</th>
+        <th>Customer</th>
+        <th>Email</th>
+        <th>Item</th>
+        <th>Asking Price</th>
+        <th>Condition</th>
+        <th>Details</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="requests-body"></tbody>
+  </table>
+
+  <p id="no-requests" style="color: gray; display:none;">No pending requests.</p>
+
+</body>
+</html>

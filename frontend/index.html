@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gamers Hideout — Buy & Sell</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #1a1a2e;
+      --accent: #e94560;
+      --accent2: #0f3460;
+      --bg: #f8f8f8;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--brand);
+      color: white;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: white; }
+
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: opacity 0.2s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--accent2) 100%);
+      color: white;
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      font-size: 1.15rem;
+      opacity: 0.85;
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.15s, opacity 0.15s;
+      border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); }
+
+    /* ── HOW IT WORKS ── */
+    .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .how-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      overflow: hidden;
+    }
+
+    .how-card-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .how-card-header.buy { background: #e94560; color: white; }
+    .how-card-header.sell { background: var(--accent2); color: white; }
+
+    .how-card-header .icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .how-steps {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .step-num {
+      min-width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .step p { font-size: 0.95rem; color: var(--text); }
+    .step p strong { color: var(--text); }
+
+    /* ── LISTINGS ── */
+    .listings-section { padding: 4rem 2rem 5rem; background: white; }
+    .listings-inner { max-width: 1100px; margin: 0 auto; }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: white;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .product-info { padding: 1rem 1.1rem 1.2rem; }
+
+    .product-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-available { background: #dcfce7; color: #166534; }
+    .tag-wanted { background: #dbeafe; color: #1e40af; }
+
+    .product-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .product-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .btn-sm {
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 8px;
+    }
+
+    /* ── SELL TO US BANNER ── */
+    .sell-banner {
+      background: var(--accent2);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .sell-banner h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .sell-banner p {
+      opacity: 0.85;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    /* ── CONTACT FORM ── */
+    .contact-section {
+      padding: 5rem 2rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    label { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+
+    input, select, textarea {
+      padding: 0.65rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: white;
+      color: var(--text);
+      transition: border-color 0.15s;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent2);
+    }
+
+    textarea { resize: vertical; min-height: 120px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--brand);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+
+    footer a { color: rgba(255,255,255,0.85); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .how-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <a href="#" class="nav-logo">Gamers<span>Hideout</span></a>
+  <ul class="nav-links">
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#sell">Sell to Us</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <h1>Buy, Sell, <span>Get Paid.</span></h1>
+  <p>We buy your used electronics, consoles, and gear — or shop our inventory of handpicked items at great prices.</p>
+  <div class="hero-btns">
+    <a href="#shop" class="btn btn-primary">Shop Now</a>
+    <a href="#sell" class="btn btn-outline">Sell to Us</a>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<div id="how-it-works">
+  <div class="section">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Two simple ways to do business with us.</p>
+    <div class="how-grid">
+
+      <!-- BUY from us -->
+      <div class="how-card">
+        <div class="how-card-header buy">
+          <div class="icon">🛍️</div>
+          Buy from Us
+        </div>
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <p><strong>Browse our listings</strong> — pick the item you want.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <p><strong>Send payment</strong> — via your preferred method (Venmo, PayPal, Zelle, etc.).</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <p><strong>Receive your item</strong> — we ship it fast or arrange local pickup.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SELL to us -->
+      <div class="how-card">
+        <div class="how-card-header sell">
+          <div class="icon">💰</div>
+          Sell to Us
+        </div>
+        <div class="how-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <p><strong>Submit your item</strong> — use the form below or contact us directly.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <p><strong>Get a quote</strong> — we'll respond with a fair offer, usually within 24 hours.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <p><strong>Get paid</strong> — ship us the item, we send your cash instantly.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── PRODUCT LISTINGS ── -->
+<section class="listings-section" id="shop">
+  <div class="listings-inner">
+    <h2 class="section-title">Available Items</h2>
+    <p class="section-sub">Everything below is in stock and ready to ship.</p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+      <button class="filter-btn" onclick="filterProducts('gaming', this)">Gaming</button>
+      <button class="filter-btn" onclick="filterProducts('phones', this)">Phones</button>
+      <button class="filter-btn" onclick="filterProducts('laptops', this)">Laptops</button>
+    </div>
+
+    <div class="products-grid" id="products-grid">
+
+      <!-- PRODUCT CARDS — replace these with your real listings -->
+      <div class="product-card" data-category="gaming">
+        <div class="product-img">🎮</div>
+        <div class="product-info">
+          <span class="product-tag tag-available">In Stock</span>
+          <p class="product-name">PlayStation 5 (Disc)</p>
+          <p class="product-desc">Great condition, all cables included. Tested and working.</p>
+          <div class="product-footer">
+            <span class="product-price">$450</span>
+            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="gaming">
+        <div class="product-img">🕹️</div>
+        <div class="product-info">
+          <span class="product-tag tag-available">In Stock</span>
+          <p class="product-name">Xbox Series X</p>
+          <p class="product-desc">Like new, barely used. Comes with one controller.</p>
+          <div class="product-footer">
+            <span class="product-price">$380</span>
+            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="phones">
+        <div class="product-img">📱</div>
+        <div class="product-info">
+          <span class="product-tag tag-available">In Stock</span>
+          <p class="product-name">iPhone 14 Pro — 256GB</p>
+          <p class="product-desc">Space Black. Unlocked, battery health 92%. Minor scuffs.</p>
+          <div class="product-footer">
+            <span class="product-price">$620</span>
+            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card" data-category="laptops">
+        <div class="product-img">💻</div>
+        <div class="product-info">
+          <span class="product-tag tag-available">In Stock</span>
+          <p class="product-name">MacBook Air M2</p>
+          <p class="product-desc">Midnight color, 8GB RAM, 256GB SSD. Charger included.</p>
+          <div class="product-footer">
+            <span class="product-price">$850</span>
+            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SELL TO US BANNER ── -->
+<section class="sell-banner" id="sell">
+  <h2>Got something to sell?</h2>
+  <p>We pay fast and fair. Fill out the form below and we'll get back to you with an offer within 24 hours.</p>
+  <a href="#contact" class="btn btn-outline">Get a Quote →</a>
+</section>
+
+<!-- ── CONTACT FORM ── -->
+<form id="sell-form">
+  <div class="form-grid">
+    <div class="form-group">
+      <label for="fname">First name</label>
+      <input type="text" id="fname" placeholder="Jay" required />
+    </div>
+    <div class="form-group">
+      <label for="lname">Last name</label>
+      <input type="text" id="lname" placeholder="Smith" required />
+    </div>
+    <div class="form-group full">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@email.com" required />
+    </div>
+    <div class="form-group full">
+      <label for="inquiry">I want to…</label>
+      <select id="inquiry">
+        <option value="">Select one</option>
+        <option value="buy">Buy an item from your store</option>
+        <option value="sell">Sell an item to you</option>
+        <option value="question">Ask a general question</option>
+      </select>
+    </div>
+    <div class="form-group full">
+      <label for="item">Item name / description</label>
+      <input type="text" id="item" placeholder="e.g. PS5, iPhone 14…" />
+    </div>
+    <div class="form-group full">
+      <label for="price">Your asking price ($)</label>
+      <input type="number" id="price" placeholder="e.g. 400" step="0.01" />
+    </div>
+    <div class="form-group full">
+      <label for="condition">Condition</label>
+      <select id="condition">
+        <option value="">Select condition</option>
+        <option>Like New</option>
+        <option>Excellent</option>
+        <option>Good</option>
+        <option>Fair</option>
+      </select>
+    </div>
+    <div class="form-group full">
+      <label for="message">Extra details</label>
+      <textarea id="message" placeholder="Brand, accessories included, any damage…"></textarea>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" style="width:100%; margin-top:0.5rem;" onclick="submitRequest()">Send Message</button>
+  <p id="form-success" style="color: green; margin-top: 0.75rem; display: none;">✅ Submitted! We'll review your item and get back to you.</p>
+</form>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>© 2026 Gamers Hideout. All rights reserved. &nbsp;·&nbsp; <a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms</a></p>
+  <p style="margin-top: 0.4rem;">Based in Rocky Hill &nbsp;·&nbsp; <a href="mailto:you@email.com">you@email.com</a></p>
+</footer>
+
+<!-- ── FILTER SCRIPT ── -->
+<script>
+  function filterProducts(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.style.display = (category === 'all' || card.dataset.category === category) ? '' : 'none';
+    });
+  }
+</script>
+<script src="stock.js"></script>
+<script>
+  renderStock(); // this runs the function and fills the grid
+</script>
+<script src="stock.js"></script>
+<script>
+  renderStock();
+
+function submitRequest() {
+  const fname     = document.getElementById("fname").value.trim();
+  const lname     = document.getElementById("lname").value.trim();
+  const email     = document.getElementById("email").value.trim();
+  const inquiry   = document.getElementById("inquiry").value;
+  const itemName  = document.getElementById("item").value.trim();
+  const price     = parseFloat(document.getElementById("price").value) || 0;
+  const condition = document.getElementById("condition").value;
+  const message   = document.getElementById("message").value.trim();
+
+  if (!fname || !email || !itemName) {
+    alert("Please fill out your name, email, and item name.");
+    return;
+  }
+
+  const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
+
+  requests.push({
+    id: Date.now(), // unique ID based on timestamp
+    name: `${fname} ${lname}`,
+    email,
+    inquiry,
+    itemName,
+    price,
+    condition,
+    message,
+    submittedAt: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("pendingRequests", JSON.stringify(requests));
+
+  document.getElementById("form-success").style.display = "block";
+
+  // Clear form
+  ["fname","lname","email","item","price","message"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("inquiry").value = "";
+  document.getElementById("condition").value = "";
+}
+</script>
+</body>
+</html>
