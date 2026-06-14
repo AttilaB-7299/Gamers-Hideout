@@ -1,6 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const SUPABASE_URL = "https://gamers-hideout-website.supabase.co";   // ← paste yours
+const SUPABASE_URL = "https://sphqnxeersxfskmzzlkt.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwaHFueGVlcnN4ZnNrbXp6bGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODIxOTMsImV4cCI6MjA5Njk1ODE5M30.2lYmJDkTuWNyDBlPjNu0GJ_XY9hJ1WhW0q2rpZ_lZaQ";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
