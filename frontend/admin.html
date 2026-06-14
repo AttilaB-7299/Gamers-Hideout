@@ -2,209 +2,461 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin — Manage Stock</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — YourStore</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-    h1 { margin-bottom: 1.5rem; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #1a1a2e;
+      --accent: #e94560;
+      --accent2: #0f3460;
+      --bg: #f4f4f6;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --radius: 10px;
+      --green: #2ecc71;
+      --red: #e74c3c;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── TOP BAR ── */
+    header {
+      background: var(--brand);
+      color: white;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { font-size: 1.1rem; font-weight: 600; }
+    header a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; }
+    header a:hover { color: white; }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      padding: 1.5rem 1.75rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      background: var(--accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+
+    /* ── FORM ── */
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    input, select { width: 100%; padding: 0.6rem 0.8rem; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95rem; }
-    button { padding: 0.7rem 1.5rem; background: #e94560; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
-    button:hover { opacity: 0.88; }
-    table { width: 100%; border-collapse: collapse; margin-top: 2.5rem; }
-    th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-    th { background: #f4f4f4; font-weight: 600; }
-    .del-btn { background: none; color: crimson; border: none; cursor: pointer; font-size: 0.9rem; margin: 0; padding: 0; }
-    .del-btn:hover { text-decoration: underline; }
-    .success { color: green; font-size: 0.9rem; margin-top: 0.5rem; display: none; }
+    .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    label { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+
+    input, select, textarea {
+      padding: 0.6rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: white;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus { border-color: var(--accent2); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-green   { background: var(--green); color: white; padding: 0.35rem 0.85rem; font-size: 0.85rem; }
+    .btn-red     { background: var(--red);   color: white; padding: 0.35rem 0.85rem; font-size: 0.85rem; }
+    .btn-ghost   { background: none; color: var(--red); border: 1.5px solid var(--border); padding: 0.3rem 0.75rem; font-size: 0.85rem; }
+    .btn-ghost:hover { border-color: var(--red); }
+
+    .success-msg {
+      color: #166534;
+      background: #dcfce7;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    /* ── TABLES ── */
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+    th {
+      text-align: left;
+      padding: 0.6rem 0.85rem;
+      background: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    td {
+      padding: 0.75rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .empty-msg { color: var(--muted); font-size: 0.9rem; padding: 1.5rem 0; }
+
+    /* ── STAT CARDS ── */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+
+    .stat {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--muted); font-weight: 500; margin-bottom: 0.25rem; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text); }
+    .stat-value.accent { color: var(--accent); }
+
+    /* ── CONDITION TAG ── */
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .tag-likenew   { background: #dcfce7; color: #166534; }
+    .tag-excellent { background: #dbeafe; color: #1e40af; }
+    .tag-good      { background: #fef9c3; color: #854d0e; }
+    .tag-fair      { background: #fee2e2; color: #991b1b; }
+
+    @media (max-width: 700px) {
+      .form-row, .form-row.three { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-  <h1>🛠️ Admin — Manage Stock</h1>
+<header>
+  <h1>🛠️ Admin Panel</h1>
+  <a href="index.html">← Back to Store</a>
+</header>
 
-  <h2 style="margin-bottom: 1rem;">Add New Item</h2>
-  <div class="form-row">
-    <input id="a-name"    placeholder="Item name (e.g. PS5)" />
-    <input id="a-price"   placeholder="Price (e.g. 499.99)" type="number" step="0.01" />
-  </div>
-  <div class="form-row">
-    <input id="a-brand"   placeholder="Brand (e.g. Sony)" />
-    <select id="a-quality">
-      <option value="">Condition</option>
-      <option>Like New</option>
-      <option>Excellent</option>
-      <option>Good</option>
-      <option>Fair</option>
-      <option>Brand New</option>
-      <option>Poor</option>
-    </select>
-  </div>
-  <div class="form-row">
-    <input id="a-desc" placeholder="Short description" style="grid-column: 1 / -1;" />
-  </div>
-  <div class="form-row">
-    <select id="a-disk">
-      <option value="true">Has Disk / Physical</option>
-      <option value="false">Digital / No Disk</option>
-    </select>
+<div class="page">
+
+  <!-- STATS -->
+  <div class="stats" id="stats">
+    <div class="stat">
+      <div class="stat-label">Items in Stock</div>
+      <div class="stat-value" id="stat-stock">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Pending Requests</div>
+      <div class="stat-value accent" id="stat-requests">—</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Total Stock Value</div>
+      <div class="stat-value" id="stat-value">—</div>
+    </div>
   </div>
 
-  <button onclick="addItem()">Add to Stock</button>
-  <p class="success" id="success-msg">✅ Item added!</p>
+  <!-- ADD ITEM -->
+  <div class="card">
+    <div class="card-title">➕ Add Item to Stock</div>
 
-  <!-- Current stock table -->
-  <table id="stock-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Brand</th>
-        <th>Price</th>
-        <th>Condition</th>
-        <th>Remove</th>
-      </tr>
-    </thead>
-    <tbody id="stock-body"></tbody>
-  </table>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Item Name</label>
+        <input type="text" id="a-name" placeholder="e.g. PlayStation 5" />
+      </div>
+      <div class="form-group">
+        <label>Brand</label>
+        <input type="text" id="a-brand" placeholder="e.g. Sony" />
+      </div>
+    </div>
 
-  <script src="stock.js"></script>
-  <script>
-    function renderTable() {
-      const stock = getStock();
-      const body = document.getElementById("stock-body");
-      body.innerHTML = "";
+    <div class="form-row three">
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input type="number" id="a-price" placeholder="499.99" step="0.01" />
+      </div>
+      <div class="form-group">
+        <label>Condition</label>
+        <select id="a-quality">
+          <option value="">Select…</option>
+          <option>Like New</option>
+          <option>Excellent</option>
+          <option>Good</option>
+          <option>Fair</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Has Disk?</label>
+        <select id="a-disk">
+          <option value="true">Yes</option>
+          <option value="false">No / Digital</option>
+        </select>
+      </div>
+    </div>
 
-      stock.forEach(entry => {
-        const i = entry.item;
-        body.innerHTML += `
+    <div class="form-row">
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Description</label>
+        <input type="text" id="a-desc" placeholder="Short description shown on the store" />
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="addItem()">Add to Stock</button>
+    <div class="success-msg" id="add-success">✅ Item added to stock!</div>
+  </div>
+
+  <!-- CURRENT STOCK -->
+  <div class="card">
+    <div class="card-title">📦 Current Stock</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
           <tr>
-            <td>${i.name}</td>
-            <td>${i.brand}</td>
-            <td>$${i.price.toFixed(2)}</td>
-            <td>${i.quality}</td>
-            <td><button class="del-btn" onclick="removeItem(${entry.id})">Remove</button></td>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Price</th>
+            <th>Condition</th>
+            <th>Description</th>
+            <th>Remove</th>
           </tr>
-        `;
-      });
-    }
+        </thead>
+        <tbody id="stock-body"></tbody>
+      </table>
+      <p class="empty-msg" id="stock-empty" style="display:none;">No items in stock yet.</p>
+    </div>
+  </div>
 
-    function addItem() {
-      const name    = document.getElementById("a-name").value.trim();
-      const price   = parseFloat(document.getElementById("a-price").value);
-      const brand   = document.getElementById("a-brand").value.trim();
-      const quality = document.getElementById("a-quality").value;
-      const desc    = document.getElementById("a-desc").value.trim();
-      const hasDisk = document.getElementById("a-disk").value === "true";
-
-      if (!name || !price || !brand || !quality) {
-        alert("Please fill out all fields.");
-        return;
-      }
-
-      const stock = getStock();
-      const newId = stock.length > 0 ? Math.max(...stock.map(e => e.id)) + 1 : 1;
-      stock.push({ id: newId, item: new Item(name, price, desc, hasDisk, quality, brand) });
-      saveStock(stock);
-
-      // Clear fields
-      ["a-name","a-price","a-brand","a-desc"].forEach(id => document.getElementById(id).value = "");
-      document.getElementById("a-quality").value = "";
-
-      const msg = document.getElementById("success-msg");
-      msg.style.display = "block";
-      setTimeout(() => msg.style.display = "none", 2500);
-
-      renderTable();
-    }
-
-    function removeItem(id) {
-      if (!confirm("Remove this item from stock?")) return;
-      const stock = getStock().filter(e => e.id !== id);
-      saveStock(stock);
-      renderTable();
-    }
-    function renderRequests() {
-      const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
-      const body = document.getElementById("requests-body");
-      const badge = document.getElementById("badge");
-      const empty = document.getElementById("no-requests");
-
-      body.innerHTML = "";
-      badge.textContent = requests.length > 0 ? requests.length : "";
-      empty.style.display = requests.length === 0 ? "block" : "none";
-
-      requests.forEach(req => {
-        body.innerHTML += `
-          <tr id="req-${req.id}">
-            <td style="font-size:0.8rem; color:gray;">${req.submittedAt}</td>
-            <td>${req.name}</td>
-            <td><a href="mailto:${req.email}">${req.email}</a></td>
-            <td><strong>${req.itemName}</strong></td>
-            <td>$${req.price.toFixed(2)}</td>
-            <td>${req.condition || "—"}</td>
-            <td style="font-size:0.85rem; color:gray;">${req.message || "—"}</td>
-            <td>
-              <button onclick="acceptRequest(${req.id})" style="background:#2ecc71; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer; margin-right:4px;">✅ Accept</button>
-              <button onclick="rejectRequest(${req.id})" style="background:#e74c3c; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer;">❌ Reject</button>
-            </td>
+  <!-- INCOMING REQUESTS -->
+  <div class="card">
+    <div class="card-title">
+      📬 Incoming Sell Requests
+      <span class="badge" id="requests-badge" style="display:none;"></span>
+    </div>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.25rem;">
+      When a customer submits the sell form, it shows up here. Accept to add it to stock, reject to dismiss.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Submitted</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Item</th>
+            <th>Asking Price</th>
+            <th>Condition</th>
+            <th>Details</th>
+            <th>Action</th>
           </tr>
-        `;
-      });
+        </thead>
+        <tbody id="requests-body"></tbody>
+      </table>
+      <p class="empty-msg" id="requests-empty" style="display:none;">No pending requests right now.</p>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { getStock, addToStock, removeFromStock, getRequests, addRequest, removeRequest } from "./stock.js";
+
+  function conditionTag(condition) {
+    const map = {
+      "Like New":  "tag-likenew",
+      "Excellent": "tag-excellent",
+      "Good":      "tag-good",
+      "Fair":      "tag-fair"
+    };
+    const cls = map[condition] || "tag-good";
+    return `<span class="tag ${cls}">${condition || "—"}</span>`;
+  }
+
+  async function updateStats() {
+    const [stock, requests] = await Promise.all([getStock(), getRequests()]);
+    document.getElementById("stat-stock").textContent    = stock.length;
+    document.getElementById("stat-requests").textContent = requests.length;
+    const total = stock.reduce((sum, i) => sum + parseFloat(i.price || 0), 0);
+    document.getElementById("stat-value").textContent    = "$" + total.toFixed(2);
+  }
+
+  async function renderTable() {
+    const stock = await getStock();
+    const body  = document.getElementById("stock-body");
+    const empty = document.getElementById("stock-empty");
+
+    body.innerHTML = "";
+    empty.style.display = stock.length === 0 ? "block" : "none";
+
+    stock.forEach(i => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td><strong>${i.name}</strong></td>
+        <td>${i.brand || "—"}</td>
+        <td>$${parseFloat(i.price).toFixed(2)}</td>
+        <td>${conditionTag(i.quality)}</td>
+        <td style="color:var(--muted); font-size:0.85rem;">${i.description || "—"}</td>
+        <td><button class="btn btn-ghost">Remove</button></td>
+      `;
+      row.querySelector("button").addEventListener("click", () => removeItem(i.id));
+      body.appendChild(row);
+    });
+
+    updateStats();
+  }
+
+  async function renderRequests() {
+    const requests = await getRequests();
+    const body     = document.getElementById("requests-body");
+    const badge    = document.getElementById("requests-badge");
+    const empty    = document.getElementById("requests-empty");
+
+    body.innerHTML = "";
+    empty.style.display = requests.length === 0 ? "block" : "none";
+
+    if (requests.length > 0) {
+      badge.style.display  = "inline-block";
+      badge.textContent    = requests.length;
+    } else {
+      badge.style.display = "none";
     }
 
-    function acceptRequest(id) {
-      const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
-      const req = requests.find(r => r.id === id);
-      if (!req) return;
+    requests.forEach(req => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td style="font-size:0.8rem; color:var(--muted); white-space:nowrap;">${req.submitted_at}</td>
+        <td>${req.name}</td>
+        <td><a href="mailto:${req.email}" style="color:var(--accent2);">${req.email}</a></td>
+        <td><strong>${req.item_name}</strong></td>
+        <td>$${parseFloat(req.price || 0).toFixed(2)}</td>
+        <td>${conditionTag(req.condition)}</td>
+        <td style="font-size:0.85rem; color:var(--muted); max-width:180px;">${req.message || "—"}</td>
+        <td style="white-space:nowrap; display:flex; gap:6px;">
+          <button class="btn btn-green accept-btn">✅ Accept</button>
+          <button class="btn btn-red reject-btn">❌ Reject</button>
+        </td>
+      `;
+      row.querySelector(".accept-btn").addEventListener("click", () => acceptRequest(req));
+      row.querySelector(".reject-btn").addEventListener("click", () => rejectRequest(req.id));
+      body.appendChild(row);
+    });
 
-      // Add to stock automatically
-      const stock = getStock();
-      const newId = stock.length > 0 ? Math.max(...stock.map(e => e.id)) + 1 : 1;
-      stock.push({
-        id: newId,
-        item: new Item(req.itemName, req.price, req.message || "", true, req.condition || "Good", "—")
-      });
-      saveStock(stock);
+    updateStats();
+  }
 
-      // Remove from pending
-      const updated = requests.filter(r => r.id !== id);
-      localStorage.setItem("pendingRequests", JSON.stringify(updated));
+  window.addItem = async function () {
+    const name    = document.getElementById("a-name").value.trim();
+    const price   = parseFloat(document.getElementById("a-price").value);
+    const brand   = document.getElementById("a-brand").value.trim();
+    const quality = document.getElementById("a-quality").value;
+    const desc    = document.getElementById("a-desc").value.trim();
+    const hasDisk = document.getElementById("a-disk").value === "true";
 
-      renderTable();
-      renderRequests();
+    if (!name || !price || !brand || !quality) {
+      alert("Please fill out name, brand, price, and condition.");
+      return;
     }
 
-    function rejectRequest(id) {
-      if (!confirm("Reject and delete this request?")) return;
-      const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
-      const updated = requests.filter(r => r.id !== id);
-      localStorage.setItem("pendingRequests", JSON.stringify(updated));
-      renderRequests();
-    }
+    await addToStock({ name, price, brand, quality, description: desc, has_disk: hasDisk });
+
+    ["a-name","a-price","a-brand","a-desc"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("a-quality").value = "";
+
+    const msg = document.getElementById("add-success");
+    msg.style.display = "block";
+    setTimeout(() => msg.style.display = "none", 3000);
+
+    renderTable();
+  }
+
+  async function removeItem(id) {
+    if (!confirm("Remove this item from stock?")) return;
+    await removeFromStock(id);
+    renderTable();
+  }
+
+  async function acceptRequest(req) {
+    if (!confirm(`Accept "${req.item_name}" and add it to stock?`)) return;
+
+    await addToStock({
+      name:        req.item_name,
+      price:       req.price,
+      description: req.message || "",
+      quality:     req.condition || "Good",
+      brand:       "—",
+      has_disk:    true
+    });
+
+    await removeRequest(req.id);
+    renderTable();
+    renderRequests();
+  }
+
+  async function rejectRequest(id) {
+    if (!confirm("Reject and delete this request?")) return;
+    await removeRequest(id);
+    renderRequests();
+  }
+
   renderTable();
   renderRequests();
-
-  </script>
-<hr style="margin: 3rem 0;" />
-<h2>📬 Incoming Requests <span id="badge" style="background:#e94560; color:white; font-size:0.8rem; padding:2px 10px; border-radius:999px; margin-left:8px;"></span></h2>
-<p style="color: gray; font-size: 0.9rem; margin-bottom: 1.5rem;">These are sell requests submitted by customers. Accept to add to stock, reject to remove.</p>
-
-  <table id="requests-table" style="width:100%; border-collapse:collapse; margin-top:1rem;">
-    <thead>
-      <tr>
-        <th>Submitted</th>
-        <th>Customer</th>
-        <th>Email</th>
-        <th>Item</th>
-        <th>Asking Price</th>
-        <th>Condition</th>
-        <th>Details</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="requests-body"></tbody>
-  </table>
-
-  <p id="no-requests" style="color: gray; display:none;">No pending requests.</p>
+</script>
 
 </body>
 </html>

@@ -26,7 +26,6 @@
       line-height: 1.6;
     }
 
-    /* ── NAV ── */
     nav {
       background: var(--brand);
       color: white;
@@ -76,7 +75,6 @@
 
     .nav-cta:hover { opacity: 0.88; }
 
-    /* ── HERO ── */
     .hero {
       background: linear-gradient(135deg, var(--brand) 0%, var(--accent2) 100%);
       color: white;
@@ -121,11 +119,9 @@
 
     .btn:hover { transform: translateY(-2px); opacity: 0.9; }
     .btn:active { transform: translateY(0); }
-
     .btn-primary { background: var(--accent); color: white; }
     .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.6); }
 
-    /* ── HOW IT WORKS ── */
     .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
 
     .section-title {
@@ -179,18 +175,9 @@
       font-size: 1.2rem;
     }
 
-    .how-steps {
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+    .how-steps { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
 
-    .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-    }
+    .step { display: flex; align-items: flex-start; gap: 1rem; }
 
     .step-num {
       min-width: 28px;
@@ -208,9 +195,7 @@
     }
 
     .step p { font-size: 0.95rem; color: var(--text); }
-    .step p strong { color: var(--text); }
 
-    /* ── LISTINGS ── */
     .listings-section { padding: 4rem 2rem 5rem; background: white; }
     .listings-inner { max-width: 1100px; margin: 0 auto; }
 
@@ -260,7 +245,6 @@
     .product-img {
       width: 100%;
       height: 180px;
-      object-fit: cover;
       background: var(--bg);
       display: flex;
       align-items: center;
@@ -282,13 +266,8 @@
     }
 
     .tag-available { background: #dcfce7; color: #166534; }
-    .tag-wanted { background: #dbeafe; color: #1e40af; }
 
-    .product-name {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
+    .product-name { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
 
     .product-desc {
       font-size: 0.85rem;
@@ -297,25 +276,12 @@
       line-height: 1.5;
     }
 
-    .product-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
 
-    .product-price {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
+    .product-price { font-size: 1.25rem; font-weight: 700; color: var(--accent); }
 
-    .btn-sm {
-      padding: 0.45rem 1rem;
-      font-size: 0.85rem;
-      border-radius: 8px;
-    }
+    .btn-sm { padding: 0.45rem 1rem; font-size: 0.85rem; border-radius: 8px; }
 
-    /* ── SELL TO US BANNER ── */
     .sell-banner {
       background: var(--accent2);
       color: white;
@@ -323,31 +289,12 @@
       text-align: center;
     }
 
-    .sell-banner h2 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
+    .sell-banner h2 { font-size: 1.9rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .sell-banner p { opacity: 0.85; max-width: 500px; margin: 0 auto 2rem; }
 
-    .sell-banner p {
-      opacity: 0.85;
-      max-width: 500px;
-      margin: 0 auto 2rem;
-    }
+    .contact-section { padding: 5rem 2rem; max-width: 680px; margin: 0 auto; }
 
-    /* ── CONTACT FORM ── */
-    .contact-section {
-      padding: 5rem 2rem;
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
 
     .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
     .form-group.full { grid-column: 1 / -1; }
@@ -366,13 +313,9 @@
       outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent2);
-    }
-
+    input:focus, select:focus, textarea:focus { border-color: var(--accent2); }
     textarea { resize: vertical; min-height: 120px; }
 
-    /* ── FOOTER ── */
     footer {
       background: var(--brand);
       color: rgba(255,255,255,0.7);
@@ -383,7 +326,6 @@
 
     footer a { color: rgba(255,255,255,0.85); }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .how-grid { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
@@ -393,7 +335,6 @@
 </head>
 <body>
 
-<!-- ── NAVIGATION ── -->
 <nav>
   <a href="#" class="nav-logo">Gamers<span>Hideout</span></a>
   <ul class="nav-links">
@@ -404,7 +345,6 @@
   </ul>
 </nav>
 
-<!-- ── HERO ── -->
 <section class="hero">
   <h1>Buy, Sell, <span>Get Paid.</span></h1>
   <p>We buy your used electronics, consoles, and gear — or shop our inventory of handpicked items at great prices.</p>
@@ -414,14 +354,12 @@
   </div>
 </section>
 
-<!-- ── HOW IT WORKS ── -->
 <div id="how-it-works">
   <div class="section">
     <h2 class="section-title">How It Works</h2>
     <p class="section-sub">Two simple ways to do business with us.</p>
     <div class="how-grid">
 
-      <!-- BUY from us -->
       <div class="how-card">
         <div class="how-card-header buy">
           <div class="icon">🛍️</div>
@@ -443,7 +381,6 @@
         </div>
       </div>
 
-      <!-- SELL to us -->
       <div class="how-card">
         <div class="how-card-header sell">
           <div class="icon">💰</div>
@@ -469,201 +406,132 @@
   </div>
 </div>
 
-<!-- ── PRODUCT LISTINGS ── -->
 <section class="listings-section" id="shop">
   <div class="listings-inner">
     <h2 class="section-title">Available Items</h2>
     <p class="section-sub">Everything below is in stock and ready to ship.</p>
-
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
-      <button class="filter-btn" onclick="filterProducts('gaming', this)">Gaming</button>
-      <button class="filter-btn" onclick="filterProducts('phones', this)">Phones</button>
-      <button class="filter-btn" onclick="filterProducts('laptops', this)">Laptops</button>
-    </div>
-
     <div class="products-grid" id="products-grid">
-
-      <!-- PRODUCT CARDS — replace these with your real listings -->
-      <div class="product-card" data-category="gaming">
-        <div class="product-img">🎮</div>
-        <div class="product-info">
-          <span class="product-tag tag-available">In Stock</span>
-          <p class="product-name">PlayStation 5 (Disc)</p>
-          <p class="product-desc">Great condition, all cables included. Tested and working.</p>
-          <div class="product-footer">
-            <span class="product-price">$450</span>
-            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-category="gaming">
-        <div class="product-img">🕹️</div>
-        <div class="product-info">
-          <span class="product-tag tag-available">In Stock</span>
-          <p class="product-name">Xbox Series X</p>
-          <p class="product-desc">Like new, barely used. Comes with one controller.</p>
-          <div class="product-footer">
-            <span class="product-price">$380</span>
-            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-category="phones">
-        <div class="product-img">📱</div>
-        <div class="product-info">
-          <span class="product-tag tag-available">In Stock</span>
-          <p class="product-name">iPhone 14 Pro — 256GB</p>
-          <p class="product-desc">Space Black. Unlocked, battery health 92%. Minor scuffs.</p>
-          <div class="product-footer">
-            <span class="product-price">$620</span>
-            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-category="laptops">
-        <div class="product-img">💻</div>
-        <div class="product-info">
-          <span class="product-tag tag-available">In Stock</span>
-          <p class="product-name">MacBook Air M2</p>
-          <p class="product-desc">Midnight color, 8GB RAM, 256GB SSD. Charger included.</p>
-          <div class="product-footer">
-            <span class="product-price">$850</span>
-            <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
-          </div>
-        </div>
-      </div>
-
+      <p style="color:gray;">Loading...</p>
     </div>
   </div>
 </section>
 
-<!-- ── SELL TO US BANNER ── -->
 <section class="sell-banner" id="sell">
   <h2>Got something to sell?</h2>
   <p>We pay fast and fair. Fill out the form below and we'll get back to you with an offer within 24 hours.</p>
   <a href="#contact" class="btn btn-outline">Get a Quote →</a>
 </section>
 
-<!-- ── CONTACT FORM ── -->
-<form id="sell-form">
-  <div class="form-grid">
-    <div class="form-group">
-      <label for="fname">First name</label>
-      <input type="text" id="fname" placeholder="Jay" required />
-    </div>
-    <div class="form-group">
-      <label for="lname">Last name</label>
-      <input type="text" id="lname" placeholder="Smith" required />
-    </div>
-    <div class="form-group full">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="you@email.com" required />
-    </div>
-    <div class="form-group full">
-      <label for="inquiry">I want to…</label>
-      <select id="inquiry">
-        <option value="">Select one</option>
-        <option value="buy">Buy an item from your store</option>
-        <option value="sell">Sell an item to you</option>
-        <option value="question">Ask a general question</option>
-      </select>
-    </div>
-    <div class="form-group full">
-      <label for="item">Item name / description</label>
-      <input type="text" id="item" placeholder="e.g. PS5, iPhone 14…" />
-    </div>
-    <div class="form-group full">
-      <label for="price">Your asking price ($)</label>
-      <input type="number" id="price" placeholder="e.g. 400" step="0.01" />
-    </div>
-    <div class="form-group full">
-      <label for="condition">Condition</label>
-      <select id="condition">
-        <option value="">Select condition</option>
-        <option>Like New</option>
-        <option>Excellent</option>
-        <option>Good</option>
-        <option>Fair</option>
-      </select>
-    </div>
-    <div class="form-group full">
-      <label for="message">Extra details</label>
-      <textarea id="message" placeholder="Brand, accessories included, any damage…"></textarea>
-    </div>
-  </div>
-  <button type="button" class="btn btn-primary" style="width:100%; margin-top:0.5rem;" onclick="submitRequest()">Send Message</button>
-  <p id="form-success" style="color: green; margin-top: 0.75rem; display: none;">✅ Submitted! We'll review your item and get back to you.</p>
-</form>
+<section id="contact">
+  <div class="contact-section">
+    <h2 class="section-title">Contact Us</h2>
+    <p class="section-sub" style="margin-bottom:2rem;">Buying, selling, or have a question? Fill this out and we'll reply fast.</p>
 
-<!-- ── FOOTER ── -->
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="fname">First name</label>
+        <input type="text" id="fname" placeholder="Jay" required />
+      </div>
+      <div class="form-group">
+        <label for="lname">Last name</label>
+        <input type="text" id="lname" placeholder="Smith" required />
+      </div>
+      <div class="form-group full">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@email.com" required />
+      </div>
+      <div class="form-group full">
+        <label for="inquiry">I want to…</label>
+        <select id="inquiry">
+          <option value="">Select one</option>
+          <option value="buy">Buy an item from your store</option>
+          <option value="sell">Sell an item to you</option>
+          <option value="question">Ask a general question</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label for="item">Item name</label>
+        <input type="text" id="item" placeholder="e.g. PS5, iPhone 14, Nintendo Switch…" />
+      </div>
+      <div class="form-group full">
+        <label for="price">Your asking price ($)</label>
+        <input type="number" id="price" placeholder="e.g. 400" step="0.01" />
+      </div>
+      <div class="form-group full">
+        <label for="condition">Condition</label>
+        <select id="condition">
+          <option value="">Select condition</option>
+          <option>Like New</option>
+          <option>Excellent</option>
+          <option>Good</option>
+          <option>Fair</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label for="message">Extra details</label>
+        <textarea id="message" placeholder="Brand, accessories included, any damage…"></textarea>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" style="width:100%; margin-top:0.5rem;" onclick="submitRequest()">Send Message</button>
+    <p id="form-success" style="color:green; margin-top:0.75rem; display:none; text-align:center;">✅ Submitted! We'll review your item and get back to you.</p>
+    <p id="form-error" style="color:crimson; margin-top:0.75rem; display:none; text-align:center;">❌ Something went wrong. Please try again.</p>
+  </div>
+</section>
+
 <footer>
   <p>© 2026 Gamers Hideout. All rights reserved. &nbsp;·&nbsp; <a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms</a></p>
-  <p style="margin-top: 0.4rem;">Based in Rocky Hill &nbsp;·&nbsp; <a href="mailto:you@email.com">you@email.com</a></p>
+  <p style="margin-top:0.4rem;">Based in Rocky Hill, CT &nbsp;·&nbsp; <a href="mailto:you@email.com">you@email.com</a></p>
 </footer>
 
-<!-- ── FILTER SCRIPT ── -->
-<script>
-  function filterProducts(category, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+<script type="module">
+  import { renderStock, addRequest } from "./stock.js";
 
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.style.display = (category === 'all' || card.dataset.category === category) ? '' : 'none';
-    });
-  }
-</script>
-<script src="stock.js"></script>
-<script>
-  renderStock(); // this runs the function and fills the grid
-</script>
-<script src="stock.js"></script>
-<script>
   renderStock();
 
-function submitRequest() {
-  const fname     = document.getElementById("fname").value.trim();
-  const lname     = document.getElementById("lname").value.trim();
-  const email     = document.getElementById("email").value.trim();
-  const inquiry   = document.getElementById("inquiry").value;
-  const itemName  = document.getElementById("item").value.trim();
-  const price     = parseFloat(document.getElementById("price").value) || 0;
-  const condition = document.getElementById("condition").value;
-  const message   = document.getElementById("message").value.trim();
+  window.submitRequest = async function () {
+    const fname     = document.getElementById("fname").value.trim();
+    const lname     = document.getElementById("lname").value.trim();
+    const email     = document.getElementById("email").value.trim();
+    const inquiry   = document.getElementById("inquiry").value;
+    const itemName  = document.getElementById("item").value.trim();
+    const price     = parseFloat(document.getElementById("price").value) || 0;
+    const condition = document.getElementById("condition").value;
+    const message   = document.getElementById("message").value.trim();
 
-  if (!fname || !email || !itemName) {
-    alert("Please fill out your name, email, and item name.");
-    return;
+    const successMsg = document.getElementById("form-success");
+    const errorMsg   = document.getElementById("form-error");
+    successMsg.style.display = "none";
+    errorMsg.style.display   = "none";
+
+    if (!fname || !email || !itemName) {
+      alert("Please fill out your name, email, and item name.");
+      return;
+    }
+
+    const ok = await addRequest({
+      name: `${fname} ${lname}`,
+      email,
+      inquiry,
+      item_name: itemName,
+      price,
+      condition,
+      message,
+      submitted_at: new Date().toLocaleString()
+    });
+
+    if (ok) {
+      successMsg.style.display = "block";
+      ["fname","lname","email","item","price","message"].forEach(id => {
+        document.getElementById(id).value = "";
+      });
+      document.getElementById("inquiry").value  = "";
+      document.getElementById("condition").value = "";
+    } else {
+      errorMsg.style.display = "block";
+    }
   }
-
-  const requests = JSON.parse(localStorage.getItem("pendingRequests") || "[]");
-
-  requests.push({
-    id: Date.now(), // unique ID based on timestamp
-    name: `${fname} ${lname}`,
-    email,
-    inquiry,
-    itemName,
-    price,
-    condition,
-    message,
-    submittedAt: new Date().toLocaleString()
-  });
-
-  localStorage.setItem("pendingRequests", JSON.stringify(requests));
-
-  document.getElementById("form-success").style.display = "block";
-
-  // Clear form
-  ["fname","lname","email","item","price","message"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-  document.getElementById("inquiry").value = "";
-  document.getElementById("condition").value = "";
-}
 </script>
+
 </body>
 </html>

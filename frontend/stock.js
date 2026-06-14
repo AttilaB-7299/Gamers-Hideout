@@ -1,53 +1,75 @@
-class Item {
-  constructor(name, price, description, hasDisk, quality, brand) {
-    this.name = name;
-    this.price = price;
-    this.description = description;
-    this.hasDisk = hasDisk;
-    this.quality = quality;
-    this.brand = brand;
-  }
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const SUPABASE_URL = "https://gamers-hideout-website.supabase.co";   // ← paste yours
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwaHFueGVlcnN4ZnNrbXp6bGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzODIxOTMsImV4cCI6MjA5Njk1ODE5M30.2lYmJDkTuWNyDBlPjNu0GJ_XY9hJ1WhW0q2rpZ_lZaQ";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── STOCK ──
+
+async function getStock() {
+  const { data, error } = await supabase.from("stock").select("*").order("id", { ascending: false });
+  if (error) { console.error("getStock error:", error); return []; }
+  return data;
 }
 
-// Load stock from storage, or use defaults if nothing saved yet
-function getStock() {
-  const saved = localStorage.getItem("currentStock");
-  if (saved) return JSON.parse(saved);
-
-  // Default starting stock
-  return [
-    { id: 1, item: new Item("Framework Laptop", 499.99, "Framework Laptop", false, "Excellent", "Framework") },
-    { id: 2, item: new Item("Gaming Mouse", 79.99, "RGB gaming mouse.", true, "Good", "Logitech") },
-    { id: 3, item: new Item("Mechanical Keyboard", 129.99, "Cherry MX switches.", true, "Excellent", "Corsair") }
-  ];
+async function addToStock(item) {
+  const { error } = await supabase.from("stock").insert([item]);
+  if (error) { console.error("addToStock error:", error); return false; }
+  return true;
 }
 
-function saveStock(stock) {
-  localStorage.setItem("currentStock", JSON.stringify(stock));
+async function removeFromStock(id) {
+  const { error } = await supabase.from("stock").delete().eq("id", id);
+  if (error) { console.error("removeFromStock error:", error); return false; }
+  return true;
 }
 
-function renderStock() {
+// ── REQUESTS ──
+
+async function getRequests() {
+  const { data, error } = await supabase.from("requests").select("*").order("id", { ascending: false });
+  if (error) { console.error("getRequests error:", error); return []; }
+  return data;
+}
+
+async function addRequest(request) {
+  const { error } = await supabase.from("requests").insert([request]);
+  if (error) { console.error("addRequest error:", error); return false; }
+  return true;
+}
+
+async function removeRequest(id) {
+  const { error } = await supabase.from("requests").delete().eq("id", id);
+  if (error) { console.error("removeRequest error:", error); return false; }
+  return true;
+}
+
+// ── RENDER STOREFRONT ──
+
+async function renderStock() {
   const grid = document.getElementById("products-grid");
   if (!grid) return;
-  const stock = getStock();
+
+  grid.innerHTML = `<p style="color:gray;">Loading...</p>`;
+  const stock = await getStock();
   grid.innerHTML = "";
 
   if (stock.length === 0) {
-    grid.innerHTML = `<p style="color: gray;">No items in stock right now.</p>`;
+    grid.innerHTML = `<p style="color:gray; padding: 1rem 0;">No items in stock right now. Check back soon!</p>`;
     return;
   }
 
-  stock.forEach(entry => {
-    const i = entry.item;
+  stock.forEach(i => {
     grid.innerHTML += `
       <div class="product-card">
         <div class="product-img">🛒</div>
         <div class="product-info">
           <span class="product-tag tag-available">In Stock</span>
           <p class="product-name">${i.name}</p>
-          <p class="product-desc">${i.description} — Condition: ${i.quality}</p>
+          <p class="product-desc">${i.description || ""} ${i.quality ? "· Condition: " + i.quality : ""}</p>
           <div class="product-footer">
-            <span class="product-price">$${i.price.toFixed(2)}</span>
+            <span class="product-price">$${parseFloat(i.price).toFixed(2)}</span>
             <a href="#contact" class="btn btn-primary btn-sm">Buy Now</a>
           </div>
         </div>
@@ -55,3 +77,5 @@ function renderStock() {
     `;
   });
 }
+
+export { getStock, addToStock, removeFromStock, getRequests, addRequest, removeRequest, renderStock };
